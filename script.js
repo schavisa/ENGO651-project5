@@ -85,7 +85,7 @@ function onMessageArrived(r_message){
     
     if (topic.includes("/my_temperature")){
         json = JSON.parse(r_message.payloadString);
-        document.getElementById("message").innerHTML = json.temp;
+        document.getElementById("message").innerHTML = json.properties.temp;
         createMarker(json);
     } else {
         document.getElementById("message").innerHTML = r_message.payloadString;
@@ -157,10 +157,16 @@ function pub_status(){
 function createGeoJSON(position) {
 
     json = JSON.stringify({
-                "lat": position.coords.latitude,
-                "lon": position.coords.longitude,
-                "temp": parseInt(Math.random() * 100 - 40)
-    });
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [position.coords.latitude, position.coords.longitude]
+        },
+        "properties": {
+            "temp": parseInt(Math.random() * (60 - (-40)) + (-40))
+        }
+      });
+
     
     var username = document.getElementById("username").value;
     var course = document.getElementById("course").value;
@@ -217,10 +223,10 @@ function createMarker(json){
     //180: brown
     //270: green
 
-    marker = L.marker([json.lat, json.lon]).addTo(map).bindPopup("Temperature: "+String(json.temp)).openPopup();
-    if (json.temp >= -40 && json.temp < 10){
+    marker = L.marker([json.geometry.coordinates[0], json.geometry.coordinates[1]]).addTo(map).bindPopup("Temperature: "+String(json.properties.temp)).openPopup();
+    if (json.properties.temp >= -40 && json.properties.temp < 10){
         marker._icon.style.webkitFilter = "hue-rotate(" + color[0] + "deg)";
-    } else if (json.temp >= 10 && json.temp < 30) {
+    } else if (json.properties.temp >= 10 && json.properties.temp < 30) {
         marker._icon.style.webkitFilter = "hue-rotate(" + color[1] + "deg)";
     } else {
         marker._icon.style.webkitFilter = "hue-rotate(" + color[2] + "deg)";
