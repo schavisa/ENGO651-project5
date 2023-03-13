@@ -5,6 +5,10 @@ var reconnectTimeout = 2000;
 var marker;
 var json;
 
+//page set-up
+document.getElementById("stop-butt").disabled = true;
+showDiv("none");
+
 // Define the map centered on Calgary
 var map = L.map('map').setView([51.039439, -114.054339], 11);
 
@@ -64,6 +68,10 @@ function MQTTconnect(){
     document.getElementById("username").readOnly  = true;
     document.getElementById("course").readOnly  = true;
 
+    //disable buttons
+    document.getElementById("start-butt").disabled = true;
+    document.getElementById("stop-butt").disabled = false;
+
     return false;
 }
 
@@ -101,6 +109,9 @@ function onConnect() {
     document.getElementById("status").innerHTML = "Connected";
     connected_flag=1
     console.log("on Connect "+connected_flag);
+
+    //show mqtt-div
+    showDiv("block");
     return false;
 }
 
@@ -244,5 +255,15 @@ function MQTTdisconnect(){
     document.getElementById("client-id").value = "";
     document.getElementById("username").value = "";
     document.getElementById("course").value = "";
+
+    //disable buttons
+    document.getElementById("start-butt").disabled = false;
+    document.getElementById("stop-butt").disabled = true;
+
+    //hide mqtt-div
+    showDiv("none");
 }
 
+function showDiv(condition) {
+    document.getElementById('mqtt-div').style.display = condition;
+ }
