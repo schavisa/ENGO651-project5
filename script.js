@@ -4,6 +4,7 @@ var mqtt;
 var reconnectTimeout = 2000;
 var marker;
 var json;
+var marker_id = null;
 
 // page set-up
 document.getElementById("stop-butt").disabled = true;
@@ -17,6 +18,9 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
+
+// Create a group so store markers
+var markerGroup = L.layerGroup().addTo(map);
 
 
 function MQTTconnect(){
@@ -101,10 +105,17 @@ function onMessageArrived(r_message){
 function onConnect() {
     document.getElementById("status").innerHTML = "Connected";
     connected_flag=1
-    console.log("on Connect "+connected_flag);
+    console.log("on Connect " + connected_flag);
 
     //show mqtt-div
     showDiv("block");
+
+    // Subscribe to get location and temp updates
+    var username = document.getElementById("username").value;
+    var course = document.getElementById("course").value;
+    var topic = course.replaceAll(' ', '_') + "/" + username.replaceAll(' ', '_') + "/my_temperature";
+    mqtt.subscribe(topic);
+
     return false;
 }
 
@@ -152,7 +163,7 @@ function pub_status(){
         console.log(out_msg);
         document.getElementById("messages").innerHTML = out_msg;
     }
-    console.log(navigator);
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(createGeoJSON);
     } else { 
@@ -192,38 +203,42 @@ function display_msg(topic, msg){
 
 
 function sub_topics(con){
-        document.getElementById("message").innerHTML = "";
-        if(connected_flag==0){
-            out_msg="<b>Not Connected so san't subscribe</b>"
-            console.log(out_msg);
-            document.getElementById("messages").innerHTML = out_msg;
-            return false;
-        }
-
-        var stopic=document.getElementById("subscribe-topic").value;
-
-        if (stopic == "") {
-            return false;
-        }
-
-        if (con== "sub"){
-            console.log("Subscribeing to topic="+stopic);
-            mqtt.subscribe(stopic);
-            
-        } else if (con== "unsub") {
-            console.log("Unsubscribeing to topic="+stopic);
-            mqtt.unsubscribe(stopic);
-        } else {
-            return false;
-        }
-
-        display_msg("", "");
-        document.getElementById("subscribe-topic").value = "";
+    document.getElementById("message").innerHTML = "";
+    if(connected_flag==0){
+        out_msg="<b>Not Connected so san't subscribe</b>"
+        console.log(out_msg);
+        document.getElementById("messages").innerHTML = out_msg;
         return false;
+    }
+
+    var stopic=document.getElementById("subscribe-topic").value;
+
+    if (stopic == "") {
+        return false;
+    }
+
+    if (con== "sub"){
+        console.log("Subscribing to topic="+stopic);
+        mqtt.subscribe(stopic);
+        
+    } else if (con== "unsub") {
+        console.log("Unsubscribeing to topic="+stopic);
+        mqtt.unsubscribe(stopic);
+    } else {
+        return false;
+    }
+
+    display_msg("", "");
+    document.getElementById("subscribe-topic").value = "";
+    return false;
 }
 
 
 function createMarker(json){
+    if (marker_id != null) {
+        markerGroup.removeLayer(marker_id);
+    }
+    
     var color = [0, 270, 150];
     //0  : blue
     //45 : purple
@@ -233,7 +248,7 @@ function createMarker(json){
     //180: brown
     //270: green
 
-    marker = L.marker([json.geometry.coordinates[0], json.geometry.coordinates[1]]).addTo(map).bindPopup("Temperature: "+String(json.properties.temp)).openPopup();
+    marker = L.marker([json.geometry.coordinates[0], json.geometry.coordinates[1]]).addTo(markerGroup).bindPopup("Temperature: "+String(json.properties.temp)).openPopup();
     if (json.properties.temp >= -40 && json.properties.temp < 10){
         marker._icon.style.webkitFilter = "hue-rotate(" + color[0] + "deg)";
     } else if (json.properties.temp >= 10 && json.properties.temp < 30) {
@@ -241,6 +256,7 @@ function createMarker(json){
     } else {
         marker._icon.style.webkitFilter = "hue-rotate(" + color[2] + "deg)";
     }
+    marker_id = marker._leaflet_id;
 }
 
 
