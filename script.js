@@ -42,6 +42,7 @@ function MQTTconnect(){
         timeout: 3,
         onSuccess: onConnect,
         onFailure: onFailure,
+        useSSL: true,
     };
 
     mqtt.onConectionLost = onConnectionLost;
@@ -52,7 +53,6 @@ function MQTTconnect(){
     //limit user to change information
     document.getElementById("host").readOnly = true;
     document.getElementById("port").readOnly = true;
-    document.getElementById("client-id").readOnly = true;
     document.getElementById("username").readOnly  = true;
     document.getElementById("course").readOnly  = true;
 
@@ -63,6 +63,7 @@ function MQTTconnect(){
     return false;
 }
 
+
 function onConnectionLost(){
     document.getElementById("status").innerHTML = "Connection Lost";
     alert('Connection Lost! Attempting to reconnect...');
@@ -71,12 +72,14 @@ function onConnectionLost(){
     return false;
 }
 
+
 function onFailure(message){
     console.log("Failed");
     document.getElementById("status").innerHTML = "Failed";
     setTimeout(MQTTconnect, reconnectTimeout);
     return false;
 }
+
 
 function onMessageArrived(r_message){
     var topic = r_message.destinationName;
@@ -94,6 +97,7 @@ function onMessageArrived(r_message){
     
 }
 
+
 function onConnect() {
     document.getElementById("status").innerHTML = "Connected";
     connected_flag=1
@@ -104,8 +108,8 @@ function onConnect() {
     return false;
 }
 
-function send_message(topic, value){
 
+function send_message(topic, value){
     console.log("topic= "+topic);
     console.log("value= "+value);
     message = new Paho.MQTT.Message(value);
@@ -115,6 +119,7 @@ function send_message(topic, value){
 
     return false;
 }
+
 
 function pub(){
     if(connected_flag==0){
@@ -138,6 +143,8 @@ function pub(){
     document.getElementById("publish-message").value = "";
 
 }
+
+
 function pub_status(){
 
     if(connected_flag==0){
@@ -153,6 +160,7 @@ function pub_status(){
     }
 
 }
+
 
 function createGeoJSON(position) {
 
@@ -175,6 +183,7 @@ function createGeoJSON(position) {
     send_message(topic, value);
     display_msg("", "");
 }
+
 
 function display_msg(topic, msg){
     document.getElementById("topic").innerHTML = topic;
@@ -213,6 +222,7 @@ function sub_topics(con){
         return false;
 }
 
+
 function createMarker(json){
     var color = [0, 270, 150];
     //0  : blue
@@ -233,6 +243,7 @@ function createMarker(json){
     }
 }
 
+
 function MQTTdisconnect(){
     mqtt.disconnect();
     console.log("disconnected to mqtt server");
@@ -240,13 +251,11 @@ function MQTTdisconnect(){
     
     document.getElementById("host").readOnly = false;
     document.getElementById("port").readOnly = false;
-    document.getElementById("client-id").readOnly = false;
     document.getElementById("username").readOnly  = false;
     document.getElementById("course").readOnly  = false;
 
     document.getElementById("host").value = "";
     document.getElementById("port").value = "";
-    document.getElementById("client-id").value = "";
     document.getElementById("username").value = "";
     document.getElementById("course").value = "";
 
@@ -257,6 +266,7 @@ function MQTTdisconnect(){
     //hide mqtt-div
     showDiv("none");
 }
+
 
 function showDiv(condition) {
     document.getElementById('mqtt-div').style.display = condition;
