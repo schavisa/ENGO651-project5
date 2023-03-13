@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lab 5</title>
+
     <!-- Link the Leaflet js and css files files -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ==" crossorigin="" />
     <script type="text/javascript" src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
@@ -26,7 +27,6 @@
     <label for="course">Enter course:</label><input type="text" id="course"><br>
     <label for="host">Enter host:</label><input type="text" id="host"><br>
     <label for="port">Enter port:</label><input type="text" id="port"><br>
-    <label for="client-id">Enter ClientID:</label><input type="text" id="client-id"><br>
     <button onclick="MQTTconnect()" id="start-butt">Start</button>
     <button onclick="MQTTdisconnect()" id="stop-butt">Stop</button><br>
     Connection status: <p id="status"> </p>

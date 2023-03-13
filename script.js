@@ -22,9 +22,8 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 function MQTTconnect(){
     var host = document.getElementById("host").value;
     var port = parseInt(document.getElementById("port").value);
-    var cname = document.getElementById("client-id").value;
 
-    if (host == "" || port == "" || cname == ""){
+    if (host == "" || port == ""){
         document.getElementById("status").innerHTML = "Not enough information";
         return false;
     }
@@ -37,7 +36,7 @@ function MQTTconnect(){
     document.getElementById("status").innerHTML = "";
 
     // Connect to the broker via a websocket
-    mqtt = new Paho.MQTT.Client(host=host, port=port, clientId=cname)
+    mqtt = new Paho.MQTT.Client(host=host, port=port, clientId='MyReallyAwesomeClientID')
     
     var options = {
         timeout: 3,
@@ -135,7 +134,6 @@ function pub(){
     }
 
     send_message(topic, value);
-    //display_msg(topic, value);
     document.getElementById("publish-topic").value = "";
     document.getElementById("publish-message").value = "";
 
@@ -147,7 +145,7 @@ function pub_status(){
         console.log(out_msg);
         document.getElementById("messages").innerHTML = out_msg;
     }
-
+    console.log(navigator);
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(createGeoJSON);
     } else { 
@@ -161,12 +159,12 @@ function createGeoJSON(position) {
     json = JSON.stringify({
                 "lat": position.coords.latitude,
                 "lon": position.coords.longitude,
-                "temp": parseInt(Math.random() * (60 - (-40)) + (-40))
+                "temp": parseInt(Math.random() * 100 - 40)
     });
     
-    var username= document.getElementById("username").value;
-    var course= document.getElementById("course").value;
-    var topic= course+"/"+username+"/my_temperature";
+    var username = document.getElementById("username").value;
+    var course = document.getElementById("course").value;
+    var topic = course.replaceAll(' ', '_') + "/" + username.replaceAll(' ', '_') + "/my_temperature";
     var value = json;
     send_message(topic, value);
     display_msg("", "");
