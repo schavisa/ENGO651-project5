@@ -5,7 +5,7 @@ var reconnectTimeout = 2000;
 var marker;
 var json;
 
-//page set-up
+// page set-up
 document.getElementById("stop-butt").disabled = true;
 showDiv("none");
 
@@ -22,7 +22,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 function MQTTconnect(){
     var host = document.getElementById("host").value;
     var port = parseInt(document.getElementById("port").value);
-    var cname= document.getElementById("client-id").value;
+    var cname = document.getElementById("client-id").value;
 
     if (host == "" || port == "" || cname == ""){
         document.getElementById("status").innerHTML = "Not enough information";
@@ -36,30 +36,19 @@ function MQTTconnect(){
     
     document.getElementById("status").innerHTML = "";
 
-    //condition for both localhost and online host
-    var checkhost = host.replaceAll('.','');
-    //console.log(checkhost);
-    console.log("connecting to "+ host +" "+ port);
-    
-    if (/^\d+$/.test(checkhost) == true) {
-        //localhost
-        mqtt = new Paho.MQTT.Client("ws://"+host+":"+port+"/mqtt", cname);
-    } else {
-        //online host
-        mqtt = new Paho.MQTT.Client("wss://"+host+":"+port+"/mqtt", cname);
-    }
+    // Connect to the broker via a websocket
+    mqtt = new Paho.MQTT.Client(host=host, port=port, clientId=cname)
     
     var options = {
-
         timeout: 3,
         onSuccess: onConnect,
         onFailure: onFailure,
-
     };
+
     mqtt.onConectionLost = onConnectionLost;
     mqtt.onMessageArrived = onMessageArrived;
     
-    mqtt.connect(options); //connect
+    mqtt.connect(options); // connect
 
     //limit user to change information
     document.getElementById("host").readOnly = true;
@@ -76,8 +65,10 @@ function MQTTconnect(){
 }
 
 function onConnectionLost(){
-    document.getElementById("status").innerHTML = "Lost";
+    document.getElementById("status").innerHTML = "Connection Lost";
+    alert('Connection Lost! Attempting to reconnect...');
     console.log("connection lost");
+    setTimeout(MQTTconnect, reconnectTimeout);
     return false;
 }
 
@@ -95,7 +86,6 @@ function onMessageArrived(r_message){
     
     if (topic.includes("/my_temperature")){
         json = JSON.parse(r_message.payloadString);
-        //console.log(json);
         document.getElementById("message").innerHTML = json.temp;
         createMarker(json);
     } else {
@@ -129,7 +119,7 @@ function send_message(topic, value){
 
 function pub(){
     if(connected_flag==0){
-        out_msg="<b>Not Connected so can't send</b>"
+        out_msg="<b> Not Connected so can't send </b>"
         console.log(out_msg);
         document.getElementById("messages").innerHTML = out_msg;
     }
