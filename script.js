@@ -19,18 +19,18 @@ function MQTTconnect(){
     var host = document.getElementById("host").value;
     var port = parseInt(document.getElementById("port").value);
     var cname= document.getElementById("client-id").value;
-    console.log(host);
-    console.log(port);
-    console.log(cname);
-    console.log(document.getElementById("username").value);
-    console.log(document.getElementById("course").value);
-    if (host == "" || port == "" || document.getElementById("username").value == "" || document.getElementById("course").value || cname == ""){
+
+    if (host == "" || port == "" || cname == ""){
         document.getElementById("status").innerHTML = "Not enough information";
         return false;
     }
-    else{
-        document.getElementById("status").innerHTML = " ";
+    
+    if (document.getElementById("username").value=="" || document.getElementById("course").value == ""){
+        document.getElementById("status").innerHTML = "Username and/or course are invalid.";
+        return false;
     }
+    
+    document.getElementById("status").innerHTML = "";
 
     //condition for both localhost and online host
     var checkhost = host.replaceAll('.','');
