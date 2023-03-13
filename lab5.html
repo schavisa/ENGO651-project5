@@ -27,33 +27,35 @@
     <label for="host">Enter host:</label><input type="text" id="host"><br>
     <label for="port">Enter port:</label><input type="text" id="port"><br>
     <label for="client-id">Enter ClientID:</label><input type="text" id="client-id"><br>
-    <button onclick="MQTTconnect()">Start</button>
-    <button onclick="MQTTdisconnect()">Stop</button><br>
+    <button onclick="MQTTconnect()" id="start-butt">Start</button>
+    <button onclick="MQTTdisconnect()" id="stop-butt">Stop</button><br>
     Connection status: <p id="status"> </p>
     <hr>
 
-    <h3>Publish:</h3>
-    <label for="publish-topic">Publish Topic:</label><input type="text" id="publish-topic"><br>
-    <label for="publish-message">Message:</label><input type="text" id="publish-message"><br>
-    <button onclick="pub()">Publish</button><br>
-    <hr>
+    <div id="mqtt-div">
+        <h3>Publish:</h3>
+        <label for="publish-topic">Publish Topic:</label><input type="text" id="publish-topic"><br>
+        <label for="publish-message">Message:</label><input type="text" id="publish-message"><br>
+        <button onclick="pub()">Publish</button><br>
+        <hr>
 
-    <h3>My status:</h3>
-    <button onclick="pub_status()">Share my Status</button><br>
-    <hr>
+        <h3>My status:</h3>
+        <button onclick="pub_status()">Share my Status</button><br>
+        <hr>
+        
+        <h3>Subscribe & Unscribe:</h3>
+        <label for="scribe-topic">Topic:</label><input type="text" id="subscribe-topic"><br>
+        <button onclick="sub_topics('sub')">Subscribe</button>
+        <button onclick="sub_topics('unsub')">Unsubscribe</button>
+        <br>
+        <hr>
 
-    <h3>Subscribe & Unscribe:</h3>
-    <label for="scribe-topic">Topic:</label><input type="text" id="subscribe-topic"><br>
-    <button onclick="sub_topics('sub')">Subscribe</button>
-    <button onclick="sub_topics('unsub')">Unsubscribe</button>
-    <br>
-    <hr>
+        Topic:  <p id="topic"> </p>
+        Message:  <p id="message"> </p>
+        <hr>
 
-    Topic:  <p id="topic"> </p>
-    Message:  <p id="message"> </p>
-    <hr>
-
-    <div id="map"></div>
-    <script type="text/javascript" src="script.js"></script>
+        <div id="map"></div>
+        <script type="text/javascript" src="script.js"></script>
+    </div>
 </body>
 </html>
