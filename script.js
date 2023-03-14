@@ -31,13 +31,11 @@ function MQTTconnect(){
     // Check if the host and port were entered correctly
     if (host == "" || port == ""){
         document.getElementById("status").innerHTML = "Not enough information";
-        // return false;
     }
     
     // Check if a username and course were entered
     if (document.getElementById("username").value=="" || document.getElementById("course").value == ""){
         document.getElementById("status").innerHTML = "Username and/or course are invalid.";
-        // return false;
     }
     
     // Clear the status
@@ -70,8 +68,6 @@ function MQTTconnect(){
     // Disable buttons
     document.getElementById("start-butt").disabled = true;
     document.getElementById("stop-butt").disabled = false;
-
-    // return false;
 }
 
 
@@ -84,7 +80,6 @@ function onConnectionLost(response){
     
     // Reconnect
     setTimeout(MQTTconnect, reconnectTimeout);
-    // return false;
 }
 
 
@@ -94,7 +89,6 @@ function onFailure(message){
 
     // Reconnect
     setTimeout(MQTTconnect, reconnectTimeout);
-    // return false;
 }
 
 
@@ -110,16 +104,6 @@ function onMessageArrived(r_message){
     var username = document.getElementById("username").value;
     var course = document.getElementById("course").value;
     var map_update_topic = course.replaceAll(' ', '_') + "/" + username.replaceAll(' ', '_') + "/my_temperature";
-    
-    // // If topic should update the temperature
-    // if (topic === map_update_topic){
-    //     // Create a new marker
-    //     json = JSON.parse(r_message.payloadString);
-    //     document.getElementById("message").innerHTML = json.properties.temp;
-    //     createMarker(json);
-    // } else {
-    //     document.getElementById("message").innerHTML = r_message.payloadString;
-    // }
 
     // If topic should update the temperature
     if (topic === map_update_topic){
@@ -129,10 +113,7 @@ function onMessageArrived(r_message){
     }
 
     // Update the displayed message on the page
-    document.getElementById("message").innerHTML = r_message.payloadString;
-
-    // return false;
-    
+    document.getElementById("message").innerHTML = r_message.payloadString;    
 }
 
 
@@ -150,8 +131,6 @@ function onConnect() {
     var course = document.getElementById("course").value;
     var topic = course.replaceAll(' ', '_') + "/" + username.replaceAll(' ', '_') + "/my_temperature";
     mqtt.subscribe(topic);
-
-    // return false;
 }
 
 
@@ -163,8 +142,6 @@ function send_message(topic, value){
 
     // Send
     mqtt.send(message);
-
-    // return false;
 }
 
 
@@ -247,9 +224,6 @@ function display_msg(topic, msg){
 
 // Subscribe to a topic
 function sub_topics(con) {
-    // Reset the message 
-    // document.getElementById("message").innerHTML = "";
-
     // Make sure we're connected
     if (connected_flag == 0) { 
         out_msg = "<b>Not Connected so san't subscribe</b>"
