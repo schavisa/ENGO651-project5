@@ -6,7 +6,7 @@ By Adam and Chavisa
 
 ## Description
 
-[Launch the application here.](https://schavisa.github.io/ENGO651-project5/lab5.html)
+[Launch the application on GitHub pages here.](https://schavisa.github.io/ENGO651-project5/lab5.html)
 
 In this project, we use the MQTT protocol to send and receive location updates, as well as any other messages of the users choice, by using the [Paho](https://www.eclipse.org/paho/index.php?page=clients/js/index.php) javscript client to connect to an MQTT broker through WebSockets.
 
