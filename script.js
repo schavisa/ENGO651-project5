@@ -1,5 +1,5 @@
-// set-up
-var connected_flag=0;
+// Set-up
+var connected_flag = 0;
 var mqtt;
 var reconnectTimeout = 2000;
 var marker;
